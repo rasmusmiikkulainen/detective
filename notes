@@ -1,0 +1,2 @@
+when pattern is found, shift logic is incorrect
+double-check shift logic when bad_char not in pattern
