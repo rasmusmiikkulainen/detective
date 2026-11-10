@@ -12,19 +12,27 @@ The assessment level target of this work is 3.
 ### Specification
 #### What does the program do?
 The program
-1. reads user input data from a file
-2. allows user to search for a specific text pattern from their file
-3. returns all of the line numbers as well as the line contents from which the pattern was found.
+1. accepts a user-provided text pattern and file path
+2. searches for the pattern from the file line-by-line using the Boyer-Moore string search algorithm
+3. returns all of the line contents from which the pattern was found, optionally with pattern highlighting and/or line numbers.
 #### Data format
-There is no specified data format as the algorithm works on any text data.
+foo bar
 ### Correctness
 #### Typical test case
 foo bar
-#### Non-trivial algorithms
+#### Algorithms used
 ##### Boyer-Moore string search algorithm
-used to search for the specified string pattern from the larger text
+Resources I used:
+- https://www.geeksforgeeks.org/dsa/boyer-moore-algorithm-for-pattern-searching/
+- https://www.geeksforgeeks.org/dsa/boyer-moore-algorithm-good-suffix-heuristic/
+- https://en.wikipedia.org/wiki/Boyer%E2%80%93Moore_string-search_algorithm
+
+This algorithm is used to search a file for the user-specified string pattern. I used the linked documentation as a starting point. However, I deliberately avoided copying code from any existing Python implementation in favor of interpreting the linked text explanations to code. I did, however, need to consult a Python example when implementing the pattern preprocessing step for the bad-character rule.
+
+The algorithm has two main parts, the bad-character rule and the good-suffix rule.
 #### Lists
-Lists are used to:
-- store & return search results
+Lists are used for:
+- storing the character lookup table used by the Boyer-Moore algorithm
+- storing search results
 #### Classes
-A class is used to store data related to the search result (line number, text) (possibly also for --help?)
+A class is used to store each search result and provide string formatting options for it via a function.

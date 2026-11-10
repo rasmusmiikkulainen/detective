@@ -2,16 +2,24 @@ from colorama import Back
 
 
 class SearchResult:
-    def __init__(self, line_contents, pattern):
-        self.line_contents = line_contents.replace(
-            pattern, Back.LIGHTBLACK_EX + pattern + Back.RESET
-        )
-
-    def __str__(self):
-        return f"{self.line_num}: {self.line_contents}"
+    def __init__(self, line_content, pattern):
+        self.pattern = pattern
+        self.line_content = line_content
 
     def set_line_num(self, line_num):
         self.line_num = line_num
+
+    def formatted_str(self, /, numbered, hilit):
+        num = ""
+        text = self.line_content
+        if numbered:
+            num = f"{self.line_num}:  "
+        if hilit:
+            text = text.replace(self.pattern, Back.LIGHTBLACK_EX + self.pattern + Back.RESET)
+        return num + text
+
+    def __str__(self):
+        return self.line_content
 
 
 def preprocess_string(string):
