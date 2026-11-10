@@ -1,5 +1,5 @@
 # detective
-Command-line utility for searching a file for text matching a pattern. Inspired by the command `grep` found on Unix-like systems. Made without the help of AI or prepared algorithm implementations.
+Command-line utility for searching a file for text matching a pattern using the Boyer-Moore string search algorithm. Inspired by the command `grep` found on Unix-like systems.
 ## Ideas
 - argparse-library for options via cli flags
   - classes could also be used for all the command-line flags (action, description)
@@ -27,4 +27,4 @@ used to search for the specified string pattern from the larger text
 Lists are used to:
 - store & return search results
 #### Classes
-A class is used to store data related to the search key
+A class is used to store data related to the search result (line number, text) (possibly also for --help?)
