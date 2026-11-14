@@ -1,4 +1,5 @@
 from colorama import Back
+import argparse
 
 
 class SearchResult:
@@ -9,20 +10,27 @@ class SearchResult:
     def set_line_num(self, line_num):
         self.line_num = line_num
 
-    def formatted_str(self, /, numbered, hilit):
+    def formatted_result(self, /, numbered, hilit, only_line_num):
         num = ""
         text = self.line_content
         if numbered:
             num = f"{self.line_num}:  "
         if hilit:
             text = text.replace(self.pattern, Back.LIGHTBLACK_EX + self.pattern + Back.RESET)
+        if only_line_num:
+            text = str(self.line_num)
         return num + text
 
     def __str__(self):
         return self.line_content
 
 
-def preprocess_string(string):
+def parse_args():
+    parser = argparse.ArgumentParser()
+    parser.parse_args()
+
+
+def prep_badchar(string):
     out = [-1 for _ in range(256)]
 
     for i in range(len(string)):
@@ -35,7 +43,10 @@ def search(txt, pat):
     n = len(txt)
     m = len(pat)
 
-    bad_char = preprocess_string(pat)
+    if n == 0 or m == 0:
+        return []
+
+    bad_char = prep_badchar(pat)
 
     i = 0
     results = []
@@ -65,4 +76,4 @@ def search(txt, pat):
 t = "AABAACAADAABAABA"
 p = "AABA"
 
-print(search(t, p))
+parse_args()
