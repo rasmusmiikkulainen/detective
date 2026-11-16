@@ -1,5 +1,10 @@
 # detective
 Command-line utility for searching a file for text matching a case-sensitive pattern using a simplified version of the Boyer-Moore string-search algorithm. Inspired by GNU grep.
+## TODO
+- add/fix docstrings & comments
+- iterate over file itself instead of loading it to memory
+- change the preprocessing to use a dict instead of a list
+- proper --help
 ## Documentation
 ### Target assessment level
 The assessment level target of this work is 3.
