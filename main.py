@@ -11,17 +11,17 @@ import pathlib
 
 
 class SearchResult:
-    def __init__(self, line_num, line_content, size, occurences):
+    pattern_size = -1
+
+    def __init__(self, line_num, line_content, occurences):
         """
         Args:
             line_num (int): line number of the line where the pattern occurs
             line_content (str): contents of the line of text where the pattern occurs
-            size (int): length of the pattern
             cases (list): list of indices of line_content where an occurence of pattern starts
         """
         self.line_num = line_num
         self.line_content = line_content
-        self.size = size
         self.occurences = occurences
 
     # here I declare default values for each of the options
@@ -50,10 +50,10 @@ class SearchResult:
                     out += (
                         text[prev:case]
                         + Back.LIGHTBLACK_EX
-                        + text[case : case + self.size]
+                        + text[case : case + SearchResult.pattern_size]
                         + Back.RESET
                     )
-                    prev = case + self.size
+                    prev = case + SearchResult.pattern_size
 
             text = out + text[prev:]
 
@@ -62,14 +62,6 @@ class SearchResult:
             text = str(self.line_num)
 
         return num + text
-
-
-def parse_args():
-    """
-    Parse command-line arguments using argparse.
-    """
-    parser = argparse.ArgumentParser()
-    parser.parse_args()
 
 
 def prep_badchar(string):
@@ -105,9 +97,6 @@ def search(txt, pat):
     """
     n = len(txt)
     m = len(pat)
-
-    pat = pat.lower()
-    txt = txt.lower()
 
     if n == 0 or m == 0:
         return []
@@ -156,17 +145,48 @@ def lines_from_file(file_path):
     return out
 
 
-testpath = pathlib.Path("gpl-3.0.txt")
-pattern = "LICENSE"
+def parse_args():
+    """
+    Parse command-line arguments using argparse.
+    """
+    parser = argparse.ArgumentParser(
+        prog="python main.py", description="command-line file searching tool"
+    )
 
-results = []
-lines = lines_from_file(testpath)
-pattern_size = len(pattern)
+    parser.add_argument("pattern", help="pattern to be searched from file")
+    parser.add_argument("filename", help="file to search for pattern")
+    parser.add_argument("-n", "--numbered", action="store_true", help="show line numbers")
+    parser.add_argument("-hi", "--highlight", action="store_true", help="highlight pattern")
+    parser.add_argument("-on", "--only-nums", action="store_true", help="only print line numbers")
 
-for i in range(len(lines)):
-    line = lines[i]
-    line_results = search(line, pattern)
-    if line_results:
-        results.append(SearchResult(i + 1, line, pattern_size, line_results))
+    return parser.parse_args()
 
-print("\n".join([r.formatted_result(numbered=True, hilit=True) for r in results]))
+
+def main():
+    args = parse_args()
+
+    results = []
+    lines = lines_from_file(pathlib.Path(args.filename))
+    SearchResult.pattern_size = len(args.pattern)
+
+    for i in range(len(lines)):
+        line = lines[i]
+        line_results = search(line, args.pattern)
+        if line_results:
+            results.append(SearchResult(i + 1, line, line_results))
+
+    print(
+        "\n".join(
+            [
+                r.formatted_result(
+                    numbered=args.numbered,
+                    hilit=args.highlight,
+                    only_line_num=args.only_nums,
+                )
+                for r in results
+            ]
+        )
+    )
+
+
+main()
